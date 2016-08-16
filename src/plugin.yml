@@ -1,0 +1,20 @@
+name: StopSlimeBlockMoving
+version: 1.0
+description: "Stop SlimeBlock Moving with pistons"
+author: Bodyash
+
+main: me.bodyash.ssbm.main.Main
+database: false
+
+commands:
+    ssbm:
+      help:
+        description: Displays the help dialog.
+        permissions: ssbm.help
+        default: op
+        usage: /<command> help
+      reload:
+        description: Reloads the whole plugin.
+        permission: ssmb.reload
+        default: op
+        usage: /<command> reload
