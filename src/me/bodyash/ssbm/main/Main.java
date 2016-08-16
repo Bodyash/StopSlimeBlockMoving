@@ -91,7 +91,7 @@ public class Main extends JavaPlugin implements Listener {
 							+ " sucessfuly reloaded");
 					return false;
 				}
-			}else{
+			} else {
 				sender.sendMessage("[StopSlimeBlockMoving] " + (Object) ChatColor.DARK_RED + conf.getNoPermMessage());
 			}
 			if (args[0].equalsIgnoreCase("help")) {
@@ -103,21 +103,24 @@ public class Main extends JavaPlugin implements Listener {
 				return false;
 			}
 
-		}else{
-			sender.sendMessage("[StopSlimeBlockMoving] " + (Object) ChatColor.DARK_RED + "try /ssbm help or /ssbm reload");
+		} else {
+			sender.sendMessage(
+					"[StopSlimeBlockMoving] " + (Object) ChatColor.DARK_RED + "try /ssbm help or /ssbm reload");
 		}
 		return false;
 	}
 
 	private void alarm(BlockEvent e) {
-		Collection<? extends Player> arrplayer = Bukkit.getOnlinePlayers();
-		for (Player player : arrplayer) {
-			if (player.isOp() || player.hasPermission("ssbm.notify")) {
-				player.sendMessage(
-						(Object) ChatColor.YELLOW + "[SSBM] " + (Object) ChatColor.RED + conf.getNotifyMessage());
-				player.sendMessage((Object) ChatColor.RED + "X: " + e.getBlock().getLocation().getBlockX() + " Y: "
-						+ e.getBlock().getLocation().getBlockY() + " Z: " + e.getBlock().getLocation().getBlockZ()
-						+ " in World: " + e.getBlock().getLocation().getWorld().getName());
+		if (conf.isNotify()) {
+			Collection<? extends Player> arrplayer = Bukkit.getOnlinePlayers();
+			for (Player player : arrplayer) {
+				if (player.isOp() || player.hasPermission("ssbm.notify")) {
+					player.sendMessage(
+							(Object) ChatColor.YELLOW + "[SSBM] " + (Object) ChatColor.RED + conf.getNotifyMessage());
+					player.sendMessage((Object) ChatColor.RED + "X: " + e.getBlock().getLocation().getBlockX() + " Y: "
+							+ e.getBlock().getLocation().getBlockY() + " Z: " + e.getBlock().getLocation().getBlockZ()
+							+ " in World: " + e.getBlock().getLocation().getWorld().getName());
+				}
 			}
 		}
 	}
