@@ -44,7 +44,9 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void BlockPistonEvent(BlockPistonExtendEvent e) {
 		for (org.bukkit.block.Block b : e.getBlocks()) {
-			if (b.getType() == Material.SLIME_BLOCK) {
+			if (b.getType() == Material.SLIME_BLOCK || b.getType() == Material.RAILS
+					|| b.getType() == Material.ACTIVATOR_RAIL || b.getType() == Material.DETECTOR_RAIL
+					|| b.getType() == Material.POWERED_RAIL) {
 				this.alarm(e);
 				e.setCancelled(true);
 				break;
@@ -56,7 +58,9 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void BlockPistonEvent(BlockPistonRetractEvent e) {
 		for (org.bukkit.block.Block b : e.getBlocks()) {
-			if (b.getType() == Material.SLIME_BLOCK) {
+			if (b.getType() == Material.SLIME_BLOCK || b.getType() == Material.RAILS
+					|| b.getType() == Material.ACTIVATOR_RAIL || b.getType() == Material.DETECTOR_RAIL
+					|| b.getType() == Material.POWERED_RAIL) {
 				this.alarm(e);
 				e.setCancelled(true);
 				break;
