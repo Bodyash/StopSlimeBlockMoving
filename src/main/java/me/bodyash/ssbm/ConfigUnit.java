@@ -1,7 +1,8 @@
-package me.bodyash.ssbm.main;
+package me.bodyash.ssbm;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,6 +15,8 @@ public class ConfigUnit {
 	private String notifyMessagePath = "notifyMessage";
 	private String notifyPath = "notify";
 	private boolean notify = false;
+	private String blockDontMoveListPath = "BlockDontMoveList";
+	private ArrayList<String> blockDontMoveList = new ArrayList<String>();
 
 	public ConfigUnit(Main main) {
 		this.configFile = new File(main.getDataFolder(), "config.yml");
@@ -44,6 +47,12 @@ public class ConfigUnit {
                  } else {
                      this.notify = (boolean) this.config.getBoolean(this.notifyPath);
                  }
+            	 if (this.config.getList(this.blockDontMoveListPath).isEmpty()) {
+                     System.err.println("[StopSlimeBlockMoving]" + "... Something went wrong while setting the \"BlockDontMoveList\", using default message (false). ...");
+                     this.blockDontMoveList.add("SLIME_BLOCK");
+                 } else {
+                     this.blockDontMoveList = (ArrayList<String>) this.config.getList(this.blockDontMoveListPath);
+                 }
             	 
             }
 	}
@@ -54,6 +63,10 @@ public class ConfigUnit {
 		this.config.set(this.notifyMessagePath, (Object) this.notifyMessage);
 		this.config.set(this.noPermMessagePath, (Object) this.noPermMessage);
 		this.config.set(this.notifyPath, (boolean) this.notify);
+		ArrayList<String> bdml = new ArrayList<String>();
+		bdml.add("SLIME_BLOCK");
+		bdml.add("POWERED_RAIL");
+		this.config.set(blockDontMoveListPath, bdml);
 		try {
 			this.config.save(this.configFile);
 			System.out.println("[StopSlimeBlockMoving] " + "... Finished config creation!");
@@ -73,6 +86,10 @@ public class ConfigUnit {
 
 	public boolean isNotify() {
 		return notify;
+	}
+
+	public ArrayList<String> getBlockDontMoveList() {
+		return blockDontMoveList;
 	}
 	
 }

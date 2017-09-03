@@ -1,6 +1,6 @@
-package me.bodyash.ssbm.main;
+package me.bodyash.ssbm;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
@@ -19,26 +19,43 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.bodyash.ssbm.ConfigUnit;
+
 public class Main extends JavaPlugin implements Listener {
 	private ConsoleCommandSender console;
-	PluginDescriptionFile descFile;
-	ConfigUnit conf;
+	private PluginDescriptionFile descFile;
+	private ConfigUnit conf;
+	private ArrayList<Material> materials = new ArrayList<Material>();
 
 	public void onEnable() {
 
-		getServer().getPluginManager().registerEvents(this, this);
+		
 		this.console = this.getServer().getConsoleSender();
 		this.descFile = this.getDescription();
 		this.conf = new ConfigUnit(this);
+		convertMaterials();
 
 		this.console.sendMessage("[StopSlimeBlockMoving] " + (Object) ChatColor.GREEN + "Successfully enabled");
 		System.out.println("[" + this.descFile.getName() + "] Version " + this.descFile.getVersion() + " by "
 				+ this.descFile.getAuthors() + ".");
+		
+		getServer().getPluginManager().registerEvents(this, this);
 
 	}
 
 	public void onDisable() {
 		this.console.sendMessage("[StopSlimeBlockMoving]" + (Object) ChatColor.GREEN + "Successfully disabled");
+	}
+	
+	private void convertMaterials(){
+		for (String textMaterial : this.conf.getBlockDontMoveList()) {
+			try {
+				Material m = Material.valueOf(textMaterial);
+				materials.add(m);
+			} catch (Exception e) {
+				this.console.sendMessage("[StopSlimeBlockMoving] " + (Object) ChatColor.RED + "CANNOT ADD MATERIAL: " + textMaterial + (Object) ChatColor.GOLD + " use this material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
