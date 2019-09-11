@@ -1,6 +1,6 @@
 name: StopSlimeBlockMoving
-version: 1.4a
-api-version: 1.13
+version: 1.4z
+api-version: 1.14
 description: "Stop SlimeBlock Moving with pistons"
 author: Bodyash
 website: https://www.spigotmc.org/resources/stop-slime-block-moving.27933/

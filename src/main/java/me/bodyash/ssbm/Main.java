@@ -2,10 +2,12 @@ package me.bodyash.ssbm;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -60,27 +62,32 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void BlockPistonEvent(BlockPistonExtendEvent e) {
-		for (org.bukkit.block.Block b : e.getBlocks()) {
-			if (b.getType() == Material.SLIME_BLOCK || b.getType() == Material.RAIL
-					|| b.getType() == Material.ACTIVATOR_RAIL || b.getType() == Material.DETECTOR_RAIL
-					|| b.getType() == Material.POWERED_RAIL) {
-				this.alarm(e);
-				e.setCancelled(true);
-				break;
+		if (e.getBlocks().stream()
+				.anyMatch(singleEventBlock -> materials.stream().anyMatch(mat -> mat == singleEventBlock.getType()))
+				|| compareWithDefault(e.getBlocks())) {
+			this.alarm(e);
+			e.setCancelled(true);
+		}
+	}
+
+	private boolean compareWithDefault(List<Block> blocks) {
+		for (Block block : blocks) {
+			if (block.getType() == Material.SLIME_BLOCK || block.getType() == Material.RAIL
+					|| block.getType() == Material.ACTIVATOR_RAIL || block.getType() == Material.DETECTOR_RAIL
+					|| block.getType() == Material.POWERED_RAIL) {
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void BlockPistonEvent(BlockPistonRetractEvent e) {
-		for (org.bukkit.block.Block b : e.getBlocks()) {
-			if (b.getType() == Material.SLIME_BLOCK || b.getType() == Material.RAIL
-					|| b.getType() == Material.ACTIVATOR_RAIL || b.getType() == Material.DETECTOR_RAIL
-					|| b.getType() == Material.POWERED_RAIL) {
-				this.alarm(e);
-				e.setCancelled(true);
-				break;
-			}
+		if (e.getBlocks().stream()
+				.anyMatch(singleEventBlock -> materials.stream().anyMatch(mat -> mat == singleEventBlock.getType()))
+				|| compareWithDefault(e.getBlocks())) {
+			this.alarm(e);
+			e.setCancelled(true);
 		}
 	}
 
@@ -105,6 +112,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (sender.isOp() || sender.hasPermission("ssbm.reload")) {
 					conf.loadConfig();
+					convertMaterials();
 					sender.sendMessage("[StopSlimeBlockMoving] " + (Object) ChatColor.GOLD + "Plugin version: "
 							+ descFile.getVersion() + " by " + descFile.getAuthors() + (Object) ChatColor.GREEN
 							+ " sucessfuly reloaded");
